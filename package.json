@@ -8,11 +8,12 @@
   },
   "dependencies": {
     "chai": "^4.1.2",
-    "mongodb": "^2.2.31"
+    "mocha": "^10.0.0",
+    "mongodb": "^4.8.1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/origincodeacademy/startnow-db100-mongo-exercises.git"
+    "url": "https://github.com/cccareers/db200-mongodb-exercises.git"
   },
   "license": "MIT"
 }

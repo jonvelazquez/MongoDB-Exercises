@@ -1,8 +1,9 @@
 const path = require('path');
 const expect = require('chai').expect;
-const MongoClient = require('mongodb').MongoClient;
-
-var url = 'mongodb://localhost:27017/mongo_exercises';
+const { MongoClient } = require('mongodb');
+var url = 'mongodb://localhost:27017';
+const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
+const database = 'mongo_exercises';
 
 describe('Mongo Exercises collection', function main() {
   this.timeout(12000);
@@ -13,22 +14,33 @@ describe('Mongo Exercises collection', function main() {
   });
 
   it('should be able to connect to db without error', (done) => {
-    MongoClient.connect(url, (err, db) => {
-      expect(err).to.equal(null);
-      db.close();
+    client.connect()
+    .then(() => {
+      client.close();
       done();
+    })
+    .catch(err => {
+      client.close();
+      done(err);
     });
   });
 
-  it('should be able to find documents in movie collection ', (done) => {
-    MongoClient.connect(url, (err, db) => {
-      expect(err).to.equal(null);
-      let collection = db.collection('movies');
-      collection.find({}).toArray((err, docs) => {
-        expect(err).to.equal(null);
-        expect(docs.length).to.be.greaterThan(0);
-        done();
-      });
+  it('should be able to find documents in movies collection ', (done) => {
+    client.connect()
+    .then(() => {
+      const db = client.db(database);
+      const collection = db.collection('movies');
+      return collection.find({}).toArray();
+    })
+    .then(result => {
+      expect(result.length).to.be.greaterThan(0);
+      client.close();
+      done();
+    })
+    .catch(err => {
+      console.error('Error finding documents:', err);
+      client.close();
+      done(err);
     });
   });
 });
